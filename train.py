@@ -39,10 +39,11 @@ def main(_):
     while step < max_games or FLAGS.epochs == -1:
         if FLAGS.render: env.render()
 
+        state = observation
         action = policy_net.get_action(observation)
         observation, reward, done, info = env.step(action)
         observation = utils.preprocess_image(observation, game=FLAGS.game)
-        policy_net.update_memory(observation, action, reward)
+        policy_net.update_memory(state, action, reward)
 
         if reward > 0:
             games_won += 1
