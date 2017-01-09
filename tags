@@ -1,0 +1,23 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+FLAGS	models/policy.py	/^FLAGS = tf.app.flags.FLAGS$/;"	kind:variable	line:7
+FLAGS	train.py	/^FLAGS = flags.FLAGS$/;"	kind:variable	line:5
+PolicyNetwork	models/policy.py	/^class PolicyNetwork(object):$/;"	kind:class	line:10
+__author__	models/__init__.py	/^__author__ = 'ramanv'/;"	kind:variable	line:1
+__init__	models/policy.py	/^    def __init__(self):$/;"	kind:member	line:11
+__init__.py	models/__init__.py	1;"	kind:file	line:1
+_inference_graph	models/policy.py	/^    def _inference_graph(self):$/;"	kind:member	line:29
+_loss	models/policy.py	/^    def _loss(self):$/;"	kind:member	line:41
+_optimizer	models/policy.py	/^    def _optimizer(self):$/;"	kind:member	line:48
+flags	train.py	/^flags = tf.app.flags$/;"	kind:variable	line:4
+get_action	models/policy.py	/^    def get_action(self, X):$/;"	kind:member	line:65
+partial_fit_step	models/policy.py	/^    def partial_fit_step(self, X, Y):$/;"	kind:member	line:51
+policy.py	models/policy.py	1;"	kind:file	line:1
+tf	models/policy.py	/^import tensorflow as tf$/;"	kind:namespace	line:1
+tf	train.py	/^import tensorflow as tf$/;"	kind:namespace	line:1
+tl	models/policy.py	/^import tflearn as tl$/;"	kind:namespace	line:2
+train.py	train.py	1;"	kind:file	line:1
