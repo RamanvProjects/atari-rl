@@ -17,6 +17,7 @@ class PolicyNetwork(object):
         self.learning_rate = FLAGS.learning_rate
         self.image_size_x, self.image_size_y = FLAGS.image_size_x, FLAGS.image_size_y
         self.discount_factor = FLAGS.discount_factor
+        self.max_memory = FLAGS.max_memory
 
         # Network I/O streams
         self.input_shape = [None, self.image_size_y * self.image_size_x * self.channels]
@@ -47,15 +48,17 @@ class PolicyNetwork(object):
         self.states = []
         self.actions = []
         self.rewards = []
+        self.num_examples_seen = 0
         self.grad_buffer = [0.0 * self.sess.run(grad) for grad in self.network_vars]
 
     def _reset_memory(self, reset_gradient=False):
         self.states = []
         self.actions = []
         self.rewards = []
-
+ 
         if reset_gradient:
             self.grad_buffer = [0.0 * self.sess.run(grad) for grad in self.network_vars]
+            self.num_examples_seen = 0
 
     def _inference_graph(self):
         with tf.name_scope('policy_network'):
@@ -93,6 +96,7 @@ class PolicyNetwork(object):
         """
         # Discount rewards
         N = len(self.rewards)
+        self.num_examples_seen += N
         r = 0
 
         drs = np.zeros(N)
@@ -119,7 +123,7 @@ class PolicyNetwork(object):
             self.grad_buffer[i] += gradient
 
         if train_batch:
-            print "Training batch of size %d..." % len(self.rewards)
+            print "Training batch of size %d..." % self.num_examples_seen
             feed_grad = dict(zip(self.grads, self.grad_buffer))
             self.sess.run(self.optimizer, feed_dict=feed_grad)
 
@@ -152,3 +156,9 @@ class PolicyNetwork(object):
         self.states.append(state)
         self.actions.append(0.0 if action == 2 else 1.0)
         self.rewards.append(reward)
+
+        if len(self.states) > self.max_memory:
+            self.states.pop(0)
+            self.actions.pop(0)
+            self.rewards.pop(0)
+            
