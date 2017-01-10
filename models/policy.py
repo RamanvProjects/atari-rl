@@ -118,7 +118,8 @@ class PolicyNetwork(object):
             }
         )
 
-        # Updated gradient buffer
+        # Updated gradient buffer, we use a buffer over several episodes
+        # since it's usually very small
         for i, gradient in enumerate(gradients):
             self.grad_buffer[i] += gradient
 

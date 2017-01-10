@@ -48,7 +48,7 @@ def main(_):
         if reward > 0:
             games_won += 1
         else:
-            games_lost += 1
+            games_lost += -reward
 
         if done:
             env.reset()
