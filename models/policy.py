@@ -119,7 +119,7 @@ class PolicyNetwork(object):
         )
 
         # Updated gradient buffer, we use a buffer over several episodes
-        # since it's usually very small
+        # since it's usually very small as the reward signal is sparse
         for i, gradient in enumerate(gradients):
             self.grad_buffer[i] += gradient
 
