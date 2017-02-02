@@ -4,33 +4,60 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-FLAGS	models/policy.py	/^FLAGS = tf.app.flags.FLAGS$/;"	kind:variable	line:9
-FLAGS	train.py	/^FLAGS = flags.FLAGS$/;"	kind:variable	line:8
-PolicyNetwork	models/policy.py	/^class PolicyNetwork(object):$/;"	kind:class	line:12
+Buffer	models/ddpg.py	/^from utils import PolicyNetwork, Buffer$/;"	kind:namespace	line:5
+Buffer	models/utils.py	/^class Buffer(object):$/;"	kind:class	line:20
+DeepDeterministicPG	models/ddpg.py	/^class DeepDeterministicPG(PolicyNetwork):$/;"	kind:class	line:10
+FLAGS	train.py	/^FLAGS = flags.FLAGS$/;"	kind:variable	line:9
+PolicyNetwork	models/ddpg.py	/^from utils import PolicyNetwork, Buffer$/;"	kind:namespace	line:5
+PolicyNetwork	models/reinforce.py	/^from utils import PolicyNetwork$/;"	kind:namespace	line:3
+PolicyNetwork	models/utils.py	/^class PolicyNetwork(object):$/;"	kind:class	line:4
+PolicyNetwork	train.py	/^from models.utils import PolicyNetwork$/;"	kind:namespace	line:2
+ReinforcePG	models/reinforce.py	/^class ReinforcePG(PolicyNetwork):$/;"	kind:class	line:11
 __author__	models/__init__.py	/^__author__ = 'ramanv'/;"	kind:variable	line:1
-__init__	models/policy.py	/^    def __init__(self):$/;"	kind:member	line:13
+__init__	models/ddpg.py	/^        logging=True):$/;"	kind:member	line:13
+__init__	models/reinforce.py	/^        num_actions=6, logging=True):$/;"	kind:member	line:14
+__init__	models/utils.py	/^    def __init__(self):$/;"	kind:member	line:8
+__init__	models/utils.py	/^    def __init__(self, max_size):$/;"	kind:member	line:21
 __init__.py	models/__init__.py	1;"	kind:file	line:1
-_inference_graph	models/policy.py	/^    def _inference_graph(self):$/;"	kind:member	line:63
-_init_memory	models/policy.py	/^    def _init_memory(self):$/;"	kind:member	line:47
-_loss	models/policy.py	/^    def _loss(self):$/;"	kind:member	line:77
-_optimizer	models/policy.py	/^    def _optimizer(self):$/;"	kind:member	line:88
-_reset_memory	models/policy.py	/^    def _reset_memory(self, reset_gradient=False):$/;"	kind:member	line:54
-exp	models/policy.py	/^from numpy import exp$/;"	kind:namespace	line:7
-flags	train.py	/^flags = tf.app.flags$/;"	kind:variable	line:7
-get_action	models/policy.py	/^    def get_action(self, X):$/;"	kind:member	line:136
-gym	train.py	/^import gym$/;"	kind:namespace	line:3
-main	train.py	/^def main(_):$/;"	kind:function	line:27
+_actor_graph	models/ddpg.py	/^    def _actor_graph(self):$/;"	kind:member	line:41
+_critic_graph	models/ddpg.py	/^    def _critic_graph(self):$/;"	kind:member	line:46
+_inference_graph	models/reinforce.py	/^    def _inference_graph(self):$/;"	kind:member	line:66
+_init_memory	models/ddpg.py	/^    def _init_memory(self):$/;"	kind:member	line:38
+_init_memory	models/reinforce.py	/^    def _init_memory(self):$/;"	kind:member	line:50
+_loss	models/reinforce.py	/^    def _loss(self):$/;"	kind:member	line:80
+_optimizer	models/reinforce.py	/^    def _optimizer(self):$/;"	kind:member	line:94
+_reset_memory	models/reinforce.py	/^    def _reset_memory(self, reset_gradient=False):$/;"	kind:member	line:57
+add_event	models/utils.py	/^    def add_event(self, s, a, r, t, s_):$/;"	kind:member	line:30
+ddpg.py	models/ddpg.py	1;"	kind:file	line:1
+deque	models/ddpg.py	/^from collections import deque$/;"	kind:namespace	line:1
+deque	models/utils.py	/^from collections import deque$/;"	kind:namespace	line:1
+exp	models/reinforce.py	/^from numpy import exp$/;"	kind:namespace	line:6
+flags	train.py	/^flags = tf.app.flags$/;"	kind:variable	line:8
+get_action	models/reinforce.py	/^    def get_action(self, X):$/;"	kind:member	line:142
+get_action	models/utils.py	/^    def get_action(self, X):$/;"	kind:member	line:14
+get_policy_network	models/reinforce.py	/^def get_policy_network():$/;"	kind:function	line:170
+gym	train.py	/^import gym$/;"	kind:namespace	line:4
+main	train.py	/^def main(_):$/;"	kind:function	line:30
+next_batch	models/utils.py	/^    def next_batch(self, bsz):$/;"	kind:member	line:38
 np	utils.py	/^import numpy as np$/;"	kind:namespace	line:1
-partial_fit_step	models/policy.py	/^    def partial_fit_step(self, train_batch=False):$/;"	kind:member	line:92
-policy	train.py	/^from models import policy$/;"	kind:namespace	line:1
-policy.py	models/policy.py	1;"	kind:file	line:1
+partial_fit_step	models/reinforce.py	/^    def partial_fit_step(self, train_batch=False):$/;"	kind:member	line:98
+partial_fit_step	models/utils.py	/^    def partial_fit_step(self):$/;"	kind:member	line:11
 preprocess_image	utils.py	/^def preprocess_image(X, game='Pong-v0'):$/;"	kind:function	line:3
-tf	models/policy.py	/^import tensorflow as tf$/;"	kind:namespace	line:1
-tf	train.py	/^import tensorflow as tf$/;"	kind:namespace	line:2
-tl	models/policy.py	/^import tflearn as tl$/;"	kind:namespace	line:2
-tqdm	models/policy.py	/^from tqdm import tqdm$/;"	kind:namespace	line:5
+reinforce.py	models/reinforce.py	1;"	kind:file	line:1
+reset_memory	models/utils.py	/^    def reset_memory(self):$/;"	kind:member	line:45
+sample	models/utils.py	/^from random import sample$/;"	kind:namespace	line:2
+size	models/utils.py	/^    def size(self):$/;"	kind:member	line:27
+tf	models/ddpg.py	/^import tensorflow as tf$/;"	kind:namespace	line:7
+tf	models/reinforce.py	/^import tensorflow as tf$/;"	kind:namespace	line:7
+tf	train.py	/^import tensorflow as tf$/;"	kind:namespace	line:3
+tl	models/ddpg.py	/^import tflearn as tl$/;"	kind:namespace	line:6
+tl	models/reinforce.py	/^import tflearn as tl$/;"	kind:namespace	line:8
+tqdm	models/reinforce.py	/^from tqdm import tqdm$/;"	kind:namespace	line:4
 train.py	train.py	1;"	kind:file	line:1
-uniform	models/policy.py	/^from numpy.random import uniform$/;"	kind:namespace	line:6
-update_memory	models/policy.py	/^    def update_memory(self, state, action, reward, gradients=None):$/;"	kind:member	line:154
-utils	train.py	/^import utils$/;"	kind:namespace	line:4
+uniform	models/ddpg.py	/^from tflearn.initializations import uniform$/;"	kind:namespace	line:2
+uniform	models/reinforce.py	/^from numpy.random import uniform$/;"	kind:namespace	line:5
+update_memory	models/reinforce.py	/^    def update_memory(self, state, action, reward, t, next_state=None):$/;"	kind:member	line:158
+update_memory	models/utils.py	/^    def update_memory(self, s, a, r, gradients=None):$/;"	kind:member	line:17
+utils	train.py	/^import utils$/;"	kind:namespace	line:5
+utils.py	models/utils.py	1;"	kind:file	line:1
 utils.py	utils.py	1;"	kind:file	line:1

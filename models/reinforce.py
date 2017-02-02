@@ -1,29 +1,32 @@
-import tensorflow as tf
-import tflearn as tl
 from tflearn.layers.core import *
 from tflearn.layers.conv import *
+from utils import PolicyNetwork
 from tqdm import tqdm
 from numpy.random import uniform
 from numpy import exp
+import tensorflow as tf
+import tflearn as tl
 
-FLAGS = tf.app.flags.FLAGS
 
-
-class PolicyNetwork(object):
-    def __init__(self):
+class ReinforcePG(PolicyNetwork):
+    def __init__(self, channels=1, hidden_size=512, learning_rate=0.001,\
+        image_size_x=80, image_size_y=80, discount_factor=0.99, max_memory=10000,\
+        num_actions=6, logging=True):
         # Network parameters
-        self.channels = FLAGS.channels
-        self.hidden_size = FLAGS.hidden_size
-        self.learning_rate = FLAGS.learning_rate
-        self.image_size_x, self.image_size_y = FLAGS.image_size_x, FLAGS.image_size_y
-        self.discount_factor = FLAGS.discount_factor
-        self.max_memory = FLAGS.max_memory
+        self.channels = channels
+        self.hidden_size = hidden_size
+        self.learning_rate = learning_rate
+        self.image_size_x, self.image_size_y = image_size_x, image_size_y
+        self.discount_factor = discount_factor
+        self.max_memory = max_memory
+        self.logging = logging
+        self.num_actions = num_actions
 
         # Network I/O streams
-        self.input_shape = [None, self.image_size_y * self.image_size_x * self.channels]
-        self.output_shape = (None,)
+        self.input_shape = (None, self.image_size_y * self.image_size_x * self.channels)
+        self.output_shape = (None, 1)
         self.x = tf.placeholder(shape=self.input_shape, dtype=tf.float32, name='input')
-        self.y = tf.placeholder(shape=self.output_shape, dtype=tf.float32, name='taken_actions')
+        self.y = tf.placeholder(shape=self.output_shape, dtype=tf.int32, name='taken_actions')
         self.discounted_rewards = tf.placeholder(shape=self.output_shape, dtype=tf.float32, name='rewards')
         self.keep_prob = tf.placeholder(shape=None, dtype=tf.float32, name='dropout_prob')
 
@@ -69,17 +72,20 @@ class PolicyNetwork(object):
             max_pool_2 = max_pool_2d(conv_2, 2, name='max_pool_3')
             fc_1 = fully_connected(max_pool_2, self.hidden_size, activation='relu', name='fc_1')
             drop = dropout(fc_1, keep_prob=self.keep_prob, name='dropout')
-            fc_2 = fully_connected(drop, 1, activation='relu', name='fc_2')
-            out = tf.nn.sigmoid(fc_2, name='sigmoid_out')
+            fc_2 = fully_connected(drop, self.num_actions, activation='relu', name='fc_2')
+            out = tf.nn.softmax(fc_2, name='softmax_out')
 
             return out
 
     def _loss(self):
+        # TODO: Switch loss to use logarithm
+        one_hot_y = tf.one_hot(self.y, self.num_actions, 1.0, 0.0, axis=-1)
+        repeated_rewards = tf.tile(self.discounted_rewards, [1, self.num_actions])
         pg_loss = tf.reduce_mean(
-            tf.square(self.y - self.logits) * self.discounted_rewards
+            tf.reduce_sum(tf.square(one_hot_y - self.logits) * repeated_rewards)
         )
 
-        if FLAGS.logging:
+        if self.logging:
             tf.summary.scalar('Loss', pg_loss)
         
         gradients = tf.gradients(pg_loss, self.network_vars)
@@ -112,8 +118,8 @@ class PolicyNetwork(object):
             [self.loss, self.gradients],
             feed_dict={
                 self.x: self.states,
-                self.y: self.actions,
-                self.discounted_rewards: drs,
+                self.y: np.vstack(self.actions),
+                self.discounted_rewards: np.vstack(drs),
                 self.keep_prob: 1.0 
             }
         )
@@ -124,7 +130,7 @@ class PolicyNetwork(object):
             self.grad_buffer[i] += gradient
 
         if train_batch:
-            print "Training batch of size %d..." % self.num_examples_seen
+            print "***Training*** batch of size %d..." % self.num_examples_seen
             feed_grad = dict(zip(self.grads, self.grad_buffer))
             self.sess.run(self.optimizer, feed_dict=feed_grad)
 
@@ -146,20 +152,20 @@ class PolicyNetwork(object):
                                  self.x: X,
                                  self.keep_prob: 1.0
                              })
-        
-        action = 2 if prob[0][0][0] < uniform() else 3
-
+        action = int(np.random.choice(self.num_actions, 1, p=prob[0][0])[0])
         return action
 
-    def update_memory(self, state, action, reward, gradients=None):
+    def update_memory(self, state, action, reward, t, next_state=None):
         assert len(self.states) == len(self.actions) and len(self.actions) == len(self.rewards)
 
         self.states.append(state)
-        self.actions.append(0.0 if action == 2 else 1.0)
+        self.actions.append(action)
         self.rewards.append(reward)
 
         if len(self.states) > self.max_memory:
             self.states.pop(0)
             self.actions.pop(0)
             self.rewards.pop(0)
-            
+
+def get_policy_network():
+    return ReinforcePG

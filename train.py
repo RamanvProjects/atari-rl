@@ -1,4 +1,5 @@
-from models import policy
+from importlib import import_module
+from models.utils import PolicyNetwork
 import tensorflow as tf
 import gym
 import utils
@@ -23,18 +24,37 @@ flags.DEFINE_bool('verbose', True, 'Whether or not to be verbose')
 flags.DEFINE_float('reg_param', 0.001, 'Regularization parameter for network')
 flags.DEFINE_float('discount_factor', 0.99, 'Discount factor (gamma) for MDP')
 flags.DEFINE_integer('max_memory', 5000, 'Max rollout recall size')
+flags.DEFINE_string('model_type', 'reinforce', 'Name of model type (in models file)')
+flags.DEFINE_string('log_dir', 'logs/', 'Logging directory for checkpoints')
 
 def main(_):
     # Initialize network
-    policy_net = policy.PolicyNetwork()
-    max_games = FLAGS.batch_size * FLAGS.epochs * FLAGS.epoch_size
     env = gym.make(FLAGS.game)
     observation = env.reset()
     observation = utils.preprocess_image(observation, game=FLAGS.game)
 
+    args = dict(
+        channels=FLAGS.channels,
+        hidden_size=FLAGS.hidden_size,
+        learning_rate=FLAGS.learning_rate,
+        image_size_x=FLAGS.image_size_x,
+        image_size_y=FLAGS.image_size_y,
+        discount_factor=FLAGS.discount_factor,
+        max_memory=FLAGS.max_memory,
+        logging=FLAGS.logging,
+        num_actions=env.action_space.n
+    )
+
+    policy = import_module('models.%s' % FLAGS.model_type)
+    policy_net = policy.get_policy_network()(**args)
+    assert isinstance(policy_net, PolicyNetwork)
+
+    max_games = FLAGS.batch_size * FLAGS.epochs * FLAGS.epoch_size
     if FLAGS.render: env.render()
 
+    print 'Training network for game %s, saving in %s' % (FLAGS.game, FLAGS.log_dir)
     step = 0
+    t = 0
     games_won, games_lost = 0, 0
     while step < max_games or FLAGS.epochs == -1:
         if FLAGS.render: env.render()
@@ -43,7 +63,8 @@ def main(_):
         action = policy_net.get_action(observation)
         observation, reward, done, info = env.step(action)
         observation = utils.preprocess_image(observation, game=FLAGS.game)
-        policy_net.update_memory(state, action, reward)
+        policy_net.update_memory(state, action, reward, t, observation)
+        t += 1
 
         if reward > 0:
             games_won += 1
@@ -61,10 +82,11 @@ def main(_):
             print '=' * 40
             print 'Loss = %f' % loss
             print 'Reward total = %f' % sum(rewards)
-            print 'Win Percentage: %f' % (100.0 * float(games_won)/(games_won + games_lost))
+            print 'Win Percentage: %%%f' % (100.0 * float(games_won)/(games_won + games_lost))
             print
 
             games_won, games_lost = 0, 0
+            t = 0
             step += 1
 
 
