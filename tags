@@ -20,7 +20,7 @@ __init__	models/utils.py	/^    def __init__(self):$/;"	kind:member	line:8
 __init__	models/utils.py	/^    def __init__(self, max_size):$/;"	kind:member	line:21
 __init__.py	models/__init__.py	1;"	kind:file	line:1
 _actor_graph	models/ddpg.py	/^    def _actor_graph(self):$/;"	kind:member	line:41
-_critic_graph	models/ddpg.py	/^    def _critic_graph(self):$/;"	kind:member	line:46
+_critic_graph	models/ddpg.py	/^    def _critic_graph(self):$/;"	kind:member	line:45
 _inference_graph	models/reinforce.py	/^    def _inference_graph(self):$/;"	kind:member	line:66
 _init_memory	models/ddpg.py	/^    def _init_memory(self):$/;"	kind:member	line:38
 _init_memory	models/reinforce.py	/^    def _init_memory(self):$/;"	kind:member	line:50
@@ -35,6 +35,7 @@ exp	models/reinforce.py	/^from numpy import exp$/;"	kind:namespace	line:6
 flags	train.py	/^flags = tf.app.flags$/;"	kind:variable	line:8
 get_action	models/reinforce.py	/^    def get_action(self, X):$/;"	kind:member	line:142
 get_action	models/utils.py	/^    def get_action(self, X):$/;"	kind:member	line:14
+get_policy_network	models/ddpg.py	/^def get_policy_network():$/;"	kind:function	line:48
 get_policy_network	models/reinforce.py	/^def get_policy_network():$/;"	kind:function	line:170
 gym	train.py	/^import gym$/;"	kind:namespace	line:4
 main	train.py	/^def main(_):$/;"	kind:function	line:30

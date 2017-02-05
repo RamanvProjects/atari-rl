@@ -6,7 +6,7 @@ from utils import PolicyNetwork, Buffer
 import tflearn as tl
 import tensorflow as tf
 
-
+# TODO: Should get soylent?
 class DeepDeterministicPG(PolicyNetwork):
     def __init__(self, channels=1, hidden_size=512, learning_rate=0.001,\
         image_size_x=80, image_size_y=80, discount_factor=0.99, max_memory=10000,\
