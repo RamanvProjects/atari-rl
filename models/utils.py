@@ -43,5 +43,5 @@ class Buffer(object):
         return s_b, a_b, r_b, t_b, s_next_b
 
     def reset_memory(self):
-        self.deque.clear()
+        self._buffer.clear()
         self._size = 0

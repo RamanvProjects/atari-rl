@@ -4,7 +4,6 @@ import tensorflow as tf
 import gym
 import utils
 
-
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 

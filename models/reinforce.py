@@ -32,10 +32,10 @@ class ReinforcePG(PolicyNetwork):
 
         # Initialize network and optimizer for training
         self.logits = self._inference_graph()
-        self.network_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,\
+        self.network_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,
                                               scope='policy_network')
         self.loss, self.gradients = self._loss()
-        self.grads = [tf.placeholder(shape=gradient.get_shape(), dtype=tf.float32)\
+        self.grads = [tf.placeholder(shape=gradient.get_shape(), dtype=tf.float32)
                       for gradient in self.network_vars]
         self.optimizer = self._optimizer()
 
@@ -82,7 +82,7 @@ class ReinforcePG(PolicyNetwork):
         one_hot_y = tf.one_hot(self.y, self.num_actions, 1.0, 0.0, axis=-1)
         repeated_rewards = tf.tile(self.discounted_rewards, [1, self.num_actions])
         pg_loss = tf.reduce_mean(
-            tf.reduce_sum(tf.square(one_hot_y - self.logits) * repeated_rewards)
+            -tf.reduce_sum(tf.square(one_hot_y - self.logits) * repeated_rewards)
         )
 
         if self.logging:
@@ -109,7 +109,7 @@ class ReinforcePG(PolicyNetwork):
         for t in reversed(xrange(N)):
             r = self.rewards[t] + r * self.discount_factor
             drs[t] = r
-        
+
         # Normalize rewards
         drs -= np.mean(drs)
         drs /= np.std(drs)
