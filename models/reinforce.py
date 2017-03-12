@@ -154,7 +154,7 @@ class ReinforcePG(PolicyNetwork):
                              })
         action = int(np.random.choice(self.num_actions, 1, p=prob[0][0])[0])
         return action
-
+    
     def update_memory(self, state, action, reward, t, next_state=None):
         assert len(self.states) == len(self.actions) and len(self.actions) == len(self.rewards)
 

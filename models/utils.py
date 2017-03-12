@@ -6,23 +6,23 @@ class PolicyNetwork(object):
     Abstract policy network class type
     """
     def __init__(self):
-        pass
-    
+        raise NotImplementedError()
+
     def partial_fit_step(self):
-        pass
+        raise NotImplementedError()
 
     def get_action(self, X):
-        pass
+        raise NotImplementedError()
 
     def update_memory(self, s, a, r, gradients=None):
-        pass
+        raise NotImplementedError()
 
 class Buffer(object):
     def __init__(self, max_size):
         self._buffer = deque()
         self._size = 0
         self._max_size = max_size
-    
+
     @property
     def size(self):
         return self._size
@@ -32,9 +32,9 @@ class Buffer(object):
             self._buffer.popleft()
         else:
             self._size += 1
-        
+
         self._buffer.append((s, a, r, t, s_))
-    
+
     def next_batch(self, bsz):
         bsz = bsz if bsz < self.num_examples else self.num_examples
         batch = sample(self._buffer, bsz)
